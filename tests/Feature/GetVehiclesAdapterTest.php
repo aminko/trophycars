@@ -26,4 +26,17 @@ class GetVehiclesAdapterTest extends TestCase
             "links" => ["next_page", "previous_page"],
         ]);
     }
+
+    public function testItShouldReturnEmptyArrayWhenNoVehiclesExist()
+    {
+        $response = $this->getJson("/api/v1/vehicles");
+
+        $response->assertStatus(200);
+        $response->assertJsonCount(0, "data");
+        $response->assertJsonStructure([
+            "data" => [],
+            "meta" => ["per_page", "count", "has_more"],
+            "links" => ["next_page", "previous_page"],
+        ]);
+    }
 }

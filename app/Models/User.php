@@ -21,4 +21,20 @@ class User extends Model
             "vehicle_id",
         )->withPivot("purchased_at");
     }
+
+    public function hasVehicle(int $vehicleId): bool
+    {
+        return $this->vehicles()->where("vehicle_id", $vehicleId)->exists();
+    }
+
+    public function canAffordVehicle(Vehicle $vehicle): bool
+    {
+        return $this->cash >= $vehicle->price;
+    }
+
+    public function deductFromBalance(int $amount): void
+    {
+        $this->cash -= $amount;
+        $this->save();
+    }
 }
