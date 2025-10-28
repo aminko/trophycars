@@ -3,23 +3,22 @@ services:
         build:
             context: .
             dockerfile: runtime/Dockerfile
+            args:
+                UID: ${UID:-1000}
+                GID: ${GID:-1000}
         image: php-laravel-app
         container_name: php-laravel-app
         restart: unless-stopped
         working_dir: /srv
+        user: "${UID:-1000}:${GID:-1000}"
         volumes:
             - .:/srv
-            - laravel-logs:/var/log/laravel
-            - laravel-storage:/srv/storage
         networks:
             - laravel-net
         depends_on:
             - db
-        environment:
-            - LOG_CHANNEL=stack
-            - LOG_STDERR_CHANNEL=stderr
-            - LOG_STORAGE=/var/log/laravel
-            - APP_STORAGE=/srv/storage
+        env_file:
+            - .env
 
     web:
         image: nginx:alpine
@@ -55,5 +54,3 @@ networks:
 
 volumes:
     db-data:
-    laravel-logs:
-    laravel-storage:
