@@ -12,7 +12,7 @@ chown -R ${USER_ID}:${GROUP_ID} /srv || echo "Some files could not be changed"
 # In case missing autoload
 if [ ! -f /srv/vendor/autoload.php ]; then
     echo "Generating autoload file..."
-    composer install --no-dev --no-interaction --no-progress --no-scripts --optimize-autoloader
+    composer install --no-interaction --no-progress --optimize-autoloader
     php artisan key:generate
 fi
 

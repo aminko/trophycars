@@ -1,0 +1,71 @@
+#!/usr/bin/env bash
+
+help()
+{
+    echo "Script that can be used to manage development environment."
+    echo ""
+    echo "Usage: dev [COMMAND]"
+    echo ""
+    echo "Commands:"
+    echo "  start               Start environment"
+    echo "  stop                Stop environment"
+    echo "  install             run composer install"
+    echo "  phpunit             Run phpspec test"
+    echo "  migrate             Run migrations, fresh. Will wipe all data"
+    echo "  seed                Run database seeders"
+    echo ""
+}
+
+start()
+{
+    echo "##### STARTING DEVELOPMENT ENVIRONMENT #####"
+    echo ""
+    bash -c "docker-compose -f compose.yaml up -d"
+}
+
+
+stop()
+{
+    echo "##### STOPPING DEVELOPMENT ENVIRONMENT #####"
+    echo ""
+    bash -c "docker-compose -f compose.yaml stop"
+}
+
+install()
+{
+    echo "##### RUN COMPOSER INSTALL #####"
+    echo ""
+    bash -c "docker-compose -f compose.yaml exec php bash -c \"composer install --ignore-platform-req=php\""
+}
+
+phpunit()
+{
+    echo "##### RUN PHPUNIT test #####"
+    echo ""
+    bash -c "docker-compose -f compose.yaml exec php composer test"
+}
+
+migrate()
+{
+    echo "##### RUN MIGRATIONS FRESH #####"
+    echo ""
+    bash -c "docker-compose -f compose.yaml exec php php artisan migrate:fresh"
+}
+
+seed()
+{
+    echo "##### RUN DATABASE SEEDERS #####"
+    echo ""
+    bash -c "docker-compose -f compose.yaml exec php php artisan db:seed"
+}
+
+
+    case $1 in
+        start) start ;;
+        stop) stop ;;
+    install) install;;
+    phpunit) phpunit ;;
+    migrate) migrate ;;
+    seed) seed ;;
+    *) help ;;
+esac
