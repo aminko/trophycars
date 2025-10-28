@@ -19,7 +19,7 @@ class VehicleFactory extends Factory
         return [
             "name" => $this->faker->name(),
             "type" => $this->faker->randomElement(["truck"]),
-            "price" => $this->faker->numberBetween(10000, 100000),
+            "price" => $this->faker->numberBetween(1000, 15000),
         ];
     }
 }
