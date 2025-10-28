@@ -9,13 +9,18 @@ use App\Ports\GetVehicles;
 
 class DatabaseGetVehicles implements GetVehicles
 {
+    private const MIN_PER_PAGE = 1;
     private const MAX_PER_PAGE = 50;
 
     public function get(int $perPage): GameplayVehiclesDto
     {
-        $perPage =
-            $perPage < self::MAX_PER_PAGE ? $perPage : self::MAX_PER_PAGE;
-        $vehicles = Vehicle::cursorPaginate($perPage);
+        // 1 < perPage < 50
+        $perPage = max(self::MIN_PER_PAGE, min($perPage, self::MAX_PER_PAGE));
+
+        $vehicles = Vehicle::query()
+            ->select("id", "name", "type", "price")
+            ->orderBy("id")
+            ->cursorPaginate($perPage);
 
         return new GameplayVehiclesDto(
             $vehicles->items(),
